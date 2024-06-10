@@ -54,6 +54,15 @@ $CROSS_PREFIX-gcc -L/opt/riscv/riscv64-unknown-elf/lib -L/opt/riscv/lib -nostart
 $CROSS_PREFIX-objcopy -O binary -S $SHELL_FOLDER/output/trusted_domain/trusted_fw.elf $SHELL_FOLDER/output/trusted_domain/trusted_fw.bin
 $CROSS_PREFIX-objdump --source --demangle --disassemble --reloc --wide $SHELL_FOLDER/output/trusted_domain/trusted_fw.elf > $SHELL_FOLDER/output/trusted_domain/trusted_fw.lst
 
+# 编译os
+if [ ! -d "$SHELL_FOLDER/output/os" ]; then  
+mkdir $SHELL_FOLDER/output/os
+fi
+cd $SHELL_FOLDER/OS
+make
+cp $SHELL_FOLDER/OS/os.bin $SHELL_FOLDER/output/os/os.bin
+make clean
+
 # 合成firmware固件
 if [ ! -d "$SHELL_FOLDER/output/fw" ]; then  
 mkdir $SHELL_FOLDER/output/fw
@@ -70,4 +79,5 @@ dd of=fw.bin bs=1k conv=notrunc seek=512 if=$SHELL_FOLDER/output/opensbi/quard_s
 dd of=fw.bin bs=1k conv=notrunc seek=2k if=$SHELL_FOLDER/output/opensbi/fw_jump.bin
 # 写入 tdomain，地址偏移 4k * 1k = 0x400000, 因此 t_fw的地址偏移 0x400000
 dd of=fw.bin bs=1k conv=notrunc seek=4k if=$SHELL_FOLDER/output/trusted_domain/trusted_fw.bin
-
+# 写入 os.bin，地址偏移为 1k * 8k = 0x800000
+dd of=fw.bin bs=1k conv=notrunc seek=8K if=$SHELL_FOLDER/output/os/os.bin
