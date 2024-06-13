@@ -3,5 +3,9 @@
 
 void os_main()
 {
-    printk("hello!!!");
+    printk("hello!!!\n");
+    app_init_context();
+    while(1) {
+        
+    }
 }

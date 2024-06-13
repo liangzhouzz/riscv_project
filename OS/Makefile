@@ -3,17 +3,20 @@ CROSS_COMPILE = riscv64-unknown-elf-
 CFLAGS = -nostdlib -fno-builtin -I/opt/riscv/riscv64-unknown-elf/include -mcmodel=medany
 
 # riscv64-unknown-elf-gcc 工具链可以同时编译汇编和 C 代码
-CC = ${CROSS_COMPILE}gcc 
+CC = ${CROSS_COMPILE}gcc -L/opt/riscv/riscv64-unknown-elf/lib -L/opt/riscv/lib
 OBJCOPY = ${CROSS_COMPILE}objcopy
 OBJDUMP = ${CROSS_COMPILE}objdump
 
 SRCS_ASM = \
-	entry.S
+	entry.S \
+	kerneltrap.S \
 
 SRCS_C = \
 	sbi.c \
 	main.c \
 	printk.c \
+	batch.c \
+	trap.c \
 
 # 将源文件替换为 .o 文件
 OBJS = $(SRCS_ASM:.S=.o)
@@ -21,7 +24,7 @@ OBJS += $(SRCS_C:.c=.o)
 
 
 os.elf: ${OBJS}
-	${CC} ${CFLAGS} -T os.ld  -o os.elf $^
+	${CC} ${CFLAGS} -T os.ld -Wl,-Map=os.map -o os.elf $^
 	${OBJCOPY} -O binary os.elf os.bin
 
 %.o : %.c
