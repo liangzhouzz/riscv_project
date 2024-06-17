@@ -23,27 +23,30 @@ size_t syscall(size_t id, reg_t arg1, reg_t arg2, reg_t arg3) {
 }
 
 void testsys() {
-
-   
-    int ret = syscall(2,3,4,5);
-    //int ret2 = syscall(1,2,3,4);
+    const char *message = "Hello, RISC-V!\n";
+    int len = strlen(message);
+    int ret = syscall(0x40,1,message, len);
+    while (1)
+    {
+        /* code */
+    }
 }
 
 
 uint8_t KernelStack[KERNEL_STACK_SIZE];
-uint8_t UserStack[USER_STACK_SIZE]={0};
+uint8_t UserStack[USER_STACK_SIZE];
 
-extern void __restore(pt_regs *next);
+extern void __restore(trap_Context *next);
 
-struct pt_regs tasks;
+struct trap_Context tasks;
 void app_init_context()
 {
 
     reg_t user_sp = &UserStack + USER_STACK_SIZE;
-    printk("user_sp:%p\n", user_sp);
+    //printk("user_sp:%p\n", user_sp);
 
-    reg_t stvec = r_stvec();
-    printk("stvec:%x\n", stvec);
+    //reg_t stvec = r_stvec();
+    //printk("stvec:%x\n", stvec);
 
 
     trap_init();
@@ -52,11 +55,11 @@ void app_init_context()
     // 设置 sstatus 寄存器第8位即SPP位为0 表示为U模式
     sstatus &= (0U << 8);
     w_sstatus(sstatus);
-    printk("sstatus:%x\n", sstatus);
+    //printk("sstatus:%x\n", sstatus);
 
 
     tasks.sepc = (reg_t)testsys;
-    printk("tasks sepc:%x\n", tasks.sepc);
+    //printk("tasks sepc:%x\n", tasks.sepc);
 
     tasks.sstatus = sstatus;
 
@@ -64,15 +67,15 @@ void app_init_context()
 
 
 
-    pt_regs* cx_ptr = &KernelStack[0] + KERNEL_STACK_SIZE - sizeof(pt_regs);
-    printk("pt_regs: %d\n",sizeof(pt_regs));
+    trap_Context* cx_ptr = &KernelStack[0] + KERNEL_STACK_SIZE - sizeof(trap_Context);
+    //printk("pt_regs: %d\n",sizeof(trap_Context));
     cx_ptr->sepc = tasks.sepc;
-    printk("cx_ptr sepc :%x\n", cx_ptr->sepc);
-    printk("cx_ptr sepc adress:%x\n", &(cx_ptr->sepc));
+    //printk("cx_ptr sepc :%x\n", cx_ptr->sepc);
+    //printk("cx_ptr sepc adress:%x\n", &(cx_ptr->sepc));
     cx_ptr->sstatus = tasks.sstatus;
     cx_ptr->sp = tasks.sp;
     // *cx_ptr = tasks[0];
-    printk("cx_ptr adress:%x\n", cx_ptr);
+    //printk("cx_ptr adress:%x\n", cx_ptr);
 
     __restore(cx_ptr); 
 

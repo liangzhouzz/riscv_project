@@ -5,7 +5,5 @@ void os_main()
 {
     printk("hello!!!\n");
     app_init_context();
-    while(1) {
-        
-    }
+    
 }
