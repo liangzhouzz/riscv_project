@@ -2,9 +2,9 @@
 Allocating common symbols
 Common symbol       size              file
 
-tasks               0x110             batch.o
-UserStack           0x2000            batch.o
-KernelStack         0x2000            batch.o
+tasks               0x4b0             task.o
+UserStack           0x14000           task.o
+KernelStack         0x14000           task.o
 
 Memory Configuration
 
@@ -16,15 +16,17 @@ Linker script and memory map
 
 LOAD entry.o
 LOAD kerneltrap.o
+LOAD switch.o
 LOAD sbi.o
 LOAD main.o
 LOAD printk.o
-LOAD batch.o
 LOAD trap.o
 LOAD syscall.o
 LOAD string.o
+LOAD app.o
+LOAD task.o
 
-.text           0x0000000080200000      0xa76
+.text           0x0000000080200000      0xefa
  *(.text .text.*)
  .text          0x0000000080200000        0x0 entry.o
  .text.entry    0x0000000080200000        0xc entry.o
@@ -33,79 +35,100 @@ LOAD string.o
  .text          0x0000000080200010       0xc6 kerneltrap.o
                 0x0000000080200010                __alltraps
                 0x0000000080200070                __restore
- .text          0x00000000802000d6       0xb6 sbi.o
-                0x00000000802000d6                sbi_ecall
-                0x000000008020015e                sbi_console_putchar
- .text          0x000000008020018c       0x22 main.o
-                0x000000008020018c                os_main
- .text          0x00000000802001ae      0x572 printk.o
-                0x00000000802001ae                uart_puts
-                0x000000008020069a                printk
-                0x00000000802006f2                panic
- .text          0x0000000080200720      0x16c batch.o
-                0x0000000080200754                syscall
-                0x0000000080200798                testsys
-                0x00000000802007d8                app_init_context
- .text          0x000000008020088c       0xc8 trap.o
-                0x00000000802008c0                trap_handler
-                0x0000000080200934                trap_init
- .text          0x0000000080200954       0x90 syscall.o
-                0x0000000080200954                __SYSCALL
-                0x00000000802009a6                __sys_write
- .text          0x00000000802009e4       0x92 string.o
-                0x00000000802009e4                strlen
-                0x0000000080200a20                memcpy
+ .text          0x00000000802000d6       0x6a switch.o
+                0x00000000802000d6                __switch
+ .text          0x0000000080200140       0xb6 sbi.o
+                0x0000000080200140                sbi_ecall
+                0x00000000802001c8                sbi_console_putchar
+ .text          0x00000000802001f6       0x2a main.o
+                0x00000000802001f6                os_main
+ .text          0x0000000080200220      0x572 printk.o
+                0x0000000080200220                uart_puts
+                0x000000008020070c                printk
+                0x0000000080200764                panic
+ .text          0x0000000080200792       0xc8 trap.o
+                0x00000000802007c6                trap_handler
+                0x000000008020083a                trap_init
+ .text          0x000000008020085a       0xba syscall.o
+                0x000000008020085a                __SYSCALL
+                0x00000000802008c0                __sys_write
+                0x00000000802008fe                __sys_yield
+ .text          0x0000000080200914       0x92 string.o
+                0x0000000080200914                strlen
+                0x0000000080200950                memcpy
+ .text          0x00000000802009a6      0x218 app.o
+                0x00000000802009a6                syscall
+                0x00000000802009ea                sys_wirte
+                0x0000000080200a20                sys_yield
+                0x0000000080200a42                testsys_write
+                0x0000000080200a80                task_delay
+                0x0000000080200ac2                task1
+                0x0000000080200b04                task2
+                0x0000000080200b46                task3
+                0x0000000080200b88                task_init
+ .text          0x0000000080200bbe      0x33c task.o
+                0x0000000080200c0c                tcx_init
+                0x0000000080200c84                task_create
+                0x0000000080200db2                schedule
+                0x0000000080200eb6                run_first_task
 
-.rodata         0x0000000080200a78      0x105
+.rodata         0x0000000080200f00      0x1a7
  *(.rodata .rodata.*)
- .rodata        0x0000000080200a78        0xa main.o
- *fill*         0x0000000080200a82        0x6 
- .rodata        0x0000000080200a88       0x8a printk.o
- *fill*         0x0000000080200b12        0x6 
- .rodata        0x0000000080200b18       0x10 batch.o
- .rodata        0x0000000080200b28       0x14 trap.o
- *fill*         0x0000000080200b3c        0x4 
- .rodata        0x0000000080200b40       0x3d syscall.o
+ .rodata        0x0000000080200f00        0xa main.o
+ *fill*         0x0000000080200f0a        0x6 
+ .rodata        0x0000000080200f10       0x8a printk.o
+ *fill*         0x0000000080200f9a        0x6 
+ .rodata        0x0000000080200fa0       0x14 trap.o
+ *fill*         0x0000000080200fb4        0x4 
+ .rodata        0x0000000080200fb8       0x3d syscall.o
+ *fill*         0x0000000080200ff5        0x3 
+ .rodata        0x0000000080200ff8       0x5b app.o
+ *fill*         0x0000000080201053        0x5 
+ .rodata        0x0000000080201058       0x4f task.o
 
-.rela.dyn       0x0000000080200b80        0x0
- .rela.text     0x0000000080200b80        0x0 entry.o
+.rela.dyn       0x00000000802010a8        0x0
+ .rela.text     0x00000000802010a8        0x0 entry.o
 
-.data           0x0000000080200b7d      0x483
-                0x0000000080201000                . = ALIGN (0x1000)
- *fill*         0x0000000080200b7d      0x483 
+.data           0x00000000802010a7      0xf59
+                0x0000000080202000                . = ALIGN (0x1000)
+ *fill*         0x00000000802010a7      0xf59 
  *(.sdata .sdata.*)
  *(.data .data.*)
- .data          0x0000000080201000        0x0 entry.o
- .data          0x0000000080201000        0x0 kerneltrap.o
- .data          0x0000000080201000        0x0 sbi.o
- .data          0x0000000080201000        0x0 main.o
- .data          0x0000000080201000        0x0 printk.o
- .data          0x0000000080201000        0x0 batch.o
- .data          0x0000000080201000        0x0 trap.o
- .data          0x0000000080201000        0x0 syscall.o
- .data          0x0000000080201000        0x0 string.o
+ .data          0x0000000080202000        0x0 entry.o
+ .data          0x0000000080202000        0x0 kerneltrap.o
+ .data          0x0000000080202000        0x0 switch.o
+ .data          0x0000000080202000        0x0 sbi.o
+ .data          0x0000000080202000        0x0 main.o
+ .data          0x0000000080202000        0x0 printk.o
+ .data          0x0000000080202000        0x0 trap.o
+ .data          0x0000000080202000        0x0 syscall.o
+ .data          0x0000000080202000        0x0 string.o
+ .data          0x0000000080202000        0x0 app.o
+ .data          0x0000000080202000        0x0 task.o
                 [!provide]                        PROVIDE (_data_end = .)
 
-.bss            0x0000000080201000    0x144f8
+.bss            0x0000000080202000    0x388a0
  *(.sbss .sbss.*)
  *(.bss .bss.*)
- .bss           0x0000000080201000        0x0 entry.o
- .bss.stack     0x0000000080201000    0x10000 entry.o
-                0x0000000080201000                boot_stack_lower_bound
-                0x0000000080211000                boot_stack_top
- .bss           0x0000000080211000        0x0 kerneltrap.o
- .bss           0x0000000080211000        0x0 sbi.o
- .bss           0x0000000080211000        0x0 main.o
- .bss           0x0000000080211000      0x3e8 printk.o
- .bss           0x00000000802113e8        0x0 batch.o
- .bss           0x00000000802113e8        0x0 trap.o
- .bss           0x00000000802113e8        0x0 syscall.o
- .bss           0x00000000802113e8        0x0 string.o
+ .bss           0x0000000080202000        0x0 entry.o
+ .bss.stack     0x0000000080202000    0x10000 entry.o
+                0x0000000080202000                boot_stack_lower_bound
+                0x0000000080212000                boot_stack_top
+ .bss           0x0000000080212000        0x0 kerneltrap.o
+ .bss           0x0000000080212000        0x0 switch.o
+ .bss           0x0000000080212000        0x0 sbi.o
+ .bss           0x0000000080212000        0x0 main.o
+ .bss           0x0000000080212000      0x3e8 printk.o
+ .bss           0x00000000802123e8        0x0 trap.o
+ .bss           0x00000000802123e8        0x0 syscall.o
+ .bss           0x00000000802123e8        0x0 string.o
+ .bss           0x00000000802123e8        0x0 app.o
+ .bss           0x00000000802123e8        0x8 task.o
  *(COMMON)
- COMMON         0x00000000802113e8     0x4110 batch.o
-                0x00000000802113e8                tasks
-                0x00000000802114f8                UserStack
-                0x00000000802134f8                KernelStack
+ COMMON         0x00000000802123f0    0x284b0 task.o
+                0x00000000802123f0                tasks
+                0x00000000802128a0                UserStack
+                0x00000000802268a0                KernelStack
 OUTPUT(os.elf elf64-littleriscv)
 
 .riscv.attributes
@@ -115,107 +138,127 @@ OUTPUT(os.elf elf64-littleriscv)
  .riscv.attributes
                 0x0000000000000033       0x33 kerneltrap.o
  .riscv.attributes
-                0x0000000000000066       0x35 sbi.o
+                0x0000000000000066       0x33 switch.o
  .riscv.attributes
-                0x000000000000009b       0x35 main.o
+                0x0000000000000099       0x35 sbi.o
  .riscv.attributes
-                0x00000000000000d0       0x35 printk.o
+                0x00000000000000ce       0x35 main.o
  .riscv.attributes
-                0x0000000000000105       0x35 batch.o
+                0x0000000000000103       0x35 printk.o
  .riscv.attributes
-                0x000000000000013a       0x35 trap.o
+                0x0000000000000138       0x35 trap.o
  .riscv.attributes
-                0x000000000000016f       0x35 syscall.o
+                0x000000000000016d       0x35 syscall.o
  .riscv.attributes
-                0x00000000000001a4       0x35 string.o
+                0x00000000000001a2       0x35 string.o
+ .riscv.attributes
+                0x00000000000001d7       0x35 app.o
+ .riscv.attributes
+                0x000000000000020c       0x35 task.o
 
 .comment        0x0000000000000000        0xe
  .comment       0x0000000000000000        0xe sbi.o
                                           0xf (size before relaxing)
  .comment       0x000000000000000e        0xf main.o
  .comment       0x000000000000000e        0xf printk.o
- .comment       0x000000000000000e        0xf batch.o
  .comment       0x000000000000000e        0xf trap.o
  .comment       0x000000000000000e        0xf syscall.o
  .comment       0x000000000000000e        0xf string.o
+ .comment       0x000000000000000e        0xf app.o
+ .comment       0x000000000000000e        0xf task.o
 
-.debug_line     0x0000000000000000      0xe70
+.debug_line     0x0000000000000000     0x120f
  .debug_line    0x0000000000000000       0x40 entry.o
- .debug_line    0x0000000000000040      0x219 kerneltrap.o
- .debug_line    0x0000000000000259      0x12e sbi.o
- .debug_line    0x0000000000000387       0x51 main.o
- .debug_line    0x00000000000003d8      0x602 printk.o
- .debug_line    0x00000000000009da      0x1be batch.o
- .debug_line    0x0000000000000b98       0xfc trap.o
- .debug_line    0x0000000000000c94       0xdc syscall.o
- .debug_line    0x0000000000000d70      0x100 string.o
+ .debug_line    0x0000000000000040      0x213 kerneltrap.o
+ .debug_line    0x0000000000000253       0x61 switch.o
+ .debug_line    0x00000000000002b4      0x12e sbi.o
+ .debug_line    0x00000000000003e2       0x5d main.o
+ .debug_line    0x000000000000043f      0x602 printk.o
+ .debug_line    0x0000000000000a41       0xfc trap.o
+ .debug_line    0x0000000000000b3d      0x100 syscall.o
+ .debug_line    0x0000000000000c3d      0x100 string.o
+ .debug_line    0x0000000000000d3d      0x21e app.o
+ .debug_line    0x0000000000000f5b      0x2b4 task.o
 
-.debug_info     0x0000000000000000     0x1074
+.debug_info     0x0000000000000000     0x159c
  .debug_info    0x0000000000000000       0x2e entry.o
  .debug_info    0x000000000000002e       0x2e kerneltrap.o
- .debug_info    0x000000000000005c      0x26b sbi.o
- .debug_info    0x00000000000002c7       0x87 main.o
- .debug_info    0x000000000000034e      0x361 printk.o
- .debug_info    0x00000000000006af      0x430 batch.o
- .debug_info    0x0000000000000adf      0x2f6 trap.o
- .debug_info    0x0000000000000dd5      0x165 syscall.o
- .debug_info    0x0000000000000f3a      0x13a string.o
+ .debug_info    0x000000000000005c       0x2e switch.o
+ .debug_info    0x000000000000008a      0x26b sbi.o
+ .debug_info    0x00000000000002f5       0x87 main.o
+ .debug_info    0x000000000000037c      0x361 printk.o
+ .debug_info    0x00000000000006dd      0x2f6 trap.o
+ .debug_info    0x00000000000009d3      0x191 syscall.o
+ .debug_info    0x0000000000000b64      0x13a string.o
+ .debug_info    0x0000000000000c9e      0x305 app.o
+ .debug_info    0x0000000000000fa3      0x5f9 task.o
 
-.debug_abbrev   0x0000000000000000      0x674
+.debug_abbrev   0x0000000000000000      0x888
  .debug_abbrev  0x0000000000000000       0x14 entry.o
  .debug_abbrev  0x0000000000000014       0x14 kerneltrap.o
- .debug_abbrev  0x0000000000000028       0xed sbi.o
- .debug_abbrev  0x0000000000000115       0x42 main.o
- .debug_abbrev  0x0000000000000157      0x13c printk.o
- .debug_abbrev  0x0000000000000293      0x169 batch.o
- .debug_abbrev  0x00000000000003fc      0x110 trap.o
- .debug_abbrev  0x000000000000050c       0xc2 syscall.o
- .debug_abbrev  0x00000000000005ce       0xa6 string.o
+ .debug_abbrev  0x0000000000000028       0x14 switch.o
+ .debug_abbrev  0x000000000000003c       0xed sbi.o
+ .debug_abbrev  0x0000000000000129       0x42 main.o
+ .debug_abbrev  0x000000000000016b      0x13c printk.o
+ .debug_abbrev  0x00000000000002a7      0x110 trap.o
+ .debug_abbrev  0x00000000000003b7       0xef syscall.o
+ .debug_abbrev  0x00000000000004a6       0xa6 string.o
+ .debug_abbrev  0x000000000000054c      0x165 app.o
+ .debug_abbrev  0x00000000000006b1      0x1d7 task.o
 
-.debug_aranges  0x0000000000000000      0x1b0
+.debug_aranges  0x0000000000000000      0x210
  .debug_aranges
                 0x0000000000000000       0x30 entry.o
  .debug_aranges
                 0x0000000000000030       0x30 kerneltrap.o
  .debug_aranges
-                0x0000000000000060       0x30 sbi.o
+                0x0000000000000060       0x30 switch.o
  .debug_aranges
-                0x0000000000000090       0x30 main.o
+                0x0000000000000090       0x30 sbi.o
  .debug_aranges
-                0x00000000000000c0       0x30 printk.o
+                0x00000000000000c0       0x30 main.o
  .debug_aranges
-                0x00000000000000f0       0x30 batch.o
+                0x00000000000000f0       0x30 printk.o
  .debug_aranges
                 0x0000000000000120       0x30 trap.o
  .debug_aranges
                 0x0000000000000150       0x30 syscall.o
  .debug_aranges
                 0x0000000000000180       0x30 string.o
+ .debug_aranges
+                0x00000000000001b0       0x30 app.o
+ .debug_aranges
+                0x00000000000001e0       0x30 task.o
 
-.debug_str      0x0000000000000000      0x446
+.debug_str      0x0000000000000000      0x56f
  .debug_str     0x0000000000000000       0x3b entry.o
  .debug_str     0x000000000000003b        0xd kerneltrap.o
                                          0x40 (size before relaxing)
- .debug_str     0x0000000000000048      0x227 sbi.o
+ .debug_str     0x0000000000000048        0x9 switch.o
+                                         0x3c (size before relaxing)
+ .debug_str     0x0000000000000051      0x227 sbi.o
                                         0x28c (size before relaxing)
- .debug_str     0x000000000000026f       0x40 main.o
+ .debug_str     0x0000000000000278       0x40 main.o
                                          0xfc (size before relaxing)
- .debug_str     0x00000000000002af       0x7d printk.o
+ .debug_str     0x00000000000002b8       0x7d printk.o
                                         0x17e (size before relaxing)
- .debug_str     0x000000000000032c       0xa0 batch.o
-                                        0x1b0 (size before relaxing)
- .debug_str     0x00000000000003cc       0x2f trap.o
+ .debug_str     0x0000000000000335       0x50 trap.o
                                         0x14c (size before relaxing)
- .debug_str     0x00000000000003fb       0x30 syscall.o
-                                        0x147 (size before relaxing)
- .debug_str     0x000000000000042b       0x1b string.o
+ .debug_str     0x0000000000000385       0x3c syscall.o
+                                        0x153 (size before relaxing)
+ .debug_str     0x00000000000003c1       0x22 string.o
                                         0x11b (size before relaxing)
+ .debug_str     0x00000000000003e3       0x55 app.o
+                                        0x183 (size before relaxing)
+ .debug_str     0x0000000000000438      0x137 task.o
+                                        0x25a (size before relaxing)
 
-.debug_frame    0x0000000000000000      0x450
+.debug_frame    0x0000000000000000      0x698
  .debug_frame   0x0000000000000000       0x70 sbi.o
  .debug_frame   0x0000000000000070       0x40 main.o
  .debug_frame   0x00000000000000b0       0xf8 printk.o
- .debug_frame   0x00000000000001a8       0xf8 batch.o
- .debug_frame   0x00000000000002a0       0xd0 trap.o
- .debug_frame   0x0000000000000370       0x70 syscall.o
- .debug_frame   0x00000000000003e0       0x70 string.o
+ .debug_frame   0x00000000000001a8       0xd0 trap.o
+ .debug_frame   0x0000000000000278       0xa0 syscall.o
+ .debug_frame   0x0000000000000318       0x70 string.o
+ .debug_frame   0x0000000000000388      0x1a0 app.o
+ .debug_frame   0x0000000000000528      0x170 task.o

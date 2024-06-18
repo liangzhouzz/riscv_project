@@ -1,9 +1,10 @@
-//extern sbi_console_putchar(int ch);
 #include "os.h"
 
 void os_main()
 {
     printk("hello!!!\n");
-    app_init_context();
+    trap_init();
+    task_init();
+    run_first_task();
     
 }

@@ -19,7 +19,7 @@ trap_Context* trap_handler(trap_Context* cx)
 	}
 	
 	cx->sepc += 8;
-
+	
 	return cx;
 }
 
