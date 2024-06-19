@@ -28,4 +28,10 @@ struct sbiret {
 	long value;
 };
 
+enum sbi_ext_time_fid {
+	SBI_EXT_TIME_SET_TIMER = 0,
+};
+
+#define SBI_FID_SET_TIMER		SBI_EXT_TIME_SET_TIMER
+
 #endif  

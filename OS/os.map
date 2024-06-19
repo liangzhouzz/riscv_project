@@ -25,8 +25,9 @@ LOAD syscall.o
 LOAD string.o
 LOAD app.o
 LOAD task.o
+LOAD timer.o
 
-.text           0x0000000080200000      0xefa
+.text           0x0000000080200000     0x1086
  *(.text .text.*)
  .text          0x0000000080200000        0x0 entry.o
  .text.entry    0x0000000080200000        0xc entry.o
@@ -37,61 +38,67 @@ LOAD task.o
                 0x0000000080200070                __restore
  .text          0x00000000802000d6       0x6a switch.o
                 0x00000000802000d6                __switch
- .text          0x0000000080200140       0xb6 sbi.o
+ .text          0x0000000080200140       0xe8 sbi.o
                 0x0000000080200140                sbi_ecall
                 0x00000000802001c8                sbi_console_putchar
- .text          0x00000000802001f6       0x2a main.o
-                0x00000000802001f6                os_main
- .text          0x0000000080200220      0x572 printk.o
-                0x0000000080200220                uart_puts
-                0x000000008020070c                printk
-                0x0000000080200764                panic
- .text          0x0000000080200792       0xc8 trap.o
-                0x00000000802007c6                trap_handler
-                0x000000008020083a                trap_init
- .text          0x000000008020085a       0xba syscall.o
-                0x000000008020085a                __SYSCALL
-                0x00000000802008c0                __sys_write
-                0x00000000802008fe                __sys_yield
- .text          0x0000000080200914       0x92 string.o
-                0x0000000080200914                strlen
-                0x0000000080200950                memcpy
- .text          0x00000000802009a6      0x218 app.o
-                0x00000000802009a6                syscall
-                0x00000000802009ea                sys_wirte
-                0x0000000080200a20                sys_yield
-                0x0000000080200a42                testsys_write
-                0x0000000080200a80                task_delay
-                0x0000000080200ac2                task1
-                0x0000000080200b04                task2
-                0x0000000080200b46                task3
-                0x0000000080200b88                task_init
- .text          0x0000000080200bbe      0x33c task.o
-                0x0000000080200c0c                tcx_init
-                0x0000000080200c84                task_create
-                0x0000000080200db2                schedule
-                0x0000000080200eb6                run_first_task
+                0x00000000802001f6                sbi_set_timer
+ .text          0x0000000080200228       0x2e main.o
+                0x0000000080200228                os_main
+ .text          0x0000000080200256      0x572 printk.o
+                0x0000000080200256                uart_puts
+                0x0000000080200742                printk
+                0x000000008020079a                panic
+ .text          0x00000000802007c8      0x10c trap.o
+                0x00000000802007fc                trap_handler
+                0x00000000802008b4                trap_init
+ .text          0x00000000802008d4       0xf2 syscall.o
+                0x00000000802008d4                __sys_gettime
+                0x00000000802008ec                __SYSCALL
+                0x0000000080200972                __sys_write
+                0x00000000802009b0                __sys_yield
+ .text          0x00000000802009c6       0x92 string.o
+                0x00000000802009c6                strlen
+                0x0000000080200a02                memcpy
+ .text          0x0000000080200a58      0x1d2 app.o
+                0x0000000080200a58                syscall
+                0x0000000080200a9c                sys_wirte
+                0x0000000080200ad2                sys_yield
+                0x0000000080200af4                sys_gettime
+                0x0000000080200b16                task_delay
+                0x0000000080200b58                task1
+                0x0000000080200b8c                task2
+                0x0000000080200bc0                task3
+                0x0000000080200bf4                task_init
+ .text          0x0000000080200c2a      0x33c task.o
+                0x0000000080200c78                tcx_init
+                0x0000000080200cf0                task_create
+                0x0000000080200e1e                schedule
+                0x0000000080200f22                run_first_task
+ .text          0x0000000080200f66      0x120 timer.o
+                0x0000000080200fe8                set_next_trigger
+                0x000000008020100e                timer_init
+                0x000000008020105c                get_time_us
 
-.rodata         0x0000000080200f00      0x1a7
+.rodata         0x0000000080201088      0x1b7
  *(.rodata .rodata.*)
- .rodata        0x0000000080200f00        0xa main.o
- *fill*         0x0000000080200f0a        0x6 
- .rodata        0x0000000080200f10       0x8a printk.o
- *fill*         0x0000000080200f9a        0x6 
- .rodata        0x0000000080200fa0       0x14 trap.o
- *fill*         0x0000000080200fb4        0x4 
- .rodata        0x0000000080200fb8       0x3d syscall.o
- *fill*         0x0000000080200ff5        0x3 
- .rodata        0x0000000080200ff8       0x5b app.o
- *fill*         0x0000000080201053        0x5 
- .rodata        0x0000000080201058       0x4f task.o
+ .rodata        0x0000000080201088        0xa main.o
+ *fill*         0x0000000080201092        0x6 
+ .rodata        0x0000000080201098       0x8a printk.o
+ *fill*         0x0000000080201122        0x6 
+ .rodata        0x0000000080201128       0x3e trap.o
+ *fill*         0x0000000080201166        0x2 
+ .rodata        0x0000000080201168       0x3d syscall.o
+ *fill*         0x00000000802011a5        0x3 
+ .rodata        0x00000000802011a8       0x43 app.o
+ *fill*         0x00000000802011eb        0x5 
+ .rodata        0x00000000802011f0       0x4f task.o
 
-.rela.dyn       0x00000000802010a8        0x0
- .rela.text     0x00000000802010a8        0x0 entry.o
+.rela.dyn       0x0000000080201240        0x0
+ .rela.text     0x0000000080201240        0x0 entry.o
 
-.data           0x00000000802010a7      0xf59
+.data           0x000000008020123f      0xdc1
                 0x0000000080202000                . = ALIGN (0x1000)
- *fill*         0x00000000802010a7      0xf59 
+ *fill*         0x000000008020123f      0xdc1 
  *(.sdata .sdata.*)
  *(.data .data.*)
  .data          0x0000000080202000        0x0 entry.o
@@ -105,6 +112,7 @@ LOAD task.o
  .data          0x0000000080202000        0x0 string.o
  .data          0x0000000080202000        0x0 app.o
  .data          0x0000000080202000        0x0 task.o
+ .data          0x0000000080202000        0x0 timer.o
                 [!provide]                        PROVIDE (_data_end = .)
 
 .bss            0x0000000080202000    0x388a0
@@ -124,6 +132,7 @@ LOAD task.o
  .bss           0x00000000802123e8        0x0 string.o
  .bss           0x00000000802123e8        0x0 app.o
  .bss           0x00000000802123e8        0x8 task.o
+ .bss           0x00000000802123f0        0x0 timer.o
  *(COMMON)
  COMMON         0x00000000802123f0    0x284b0 task.o
                 0x00000000802123f0                tasks
@@ -155,6 +164,8 @@ OUTPUT(os.elf elf64-littleriscv)
                 0x00000000000001d7       0x35 app.o
  .riscv.attributes
                 0x000000000000020c       0x35 task.o
+ .riscv.attributes
+                0x0000000000000241       0x35 timer.o
 
 .comment        0x0000000000000000        0xe
  .comment       0x0000000000000000        0xe sbi.o
@@ -166,34 +177,37 @@ OUTPUT(os.elf elf64-littleriscv)
  .comment       0x000000000000000e        0xf string.o
  .comment       0x000000000000000e        0xf app.o
  .comment       0x000000000000000e        0xf task.o
+ .comment       0x000000000000000e        0xf timer.o
 
-.debug_line     0x0000000000000000     0x120f
+.debug_line     0x0000000000000000     0x1360
  .debug_line    0x0000000000000000       0x40 entry.o
  .debug_line    0x0000000000000040      0x213 kerneltrap.o
  .debug_line    0x0000000000000253       0x61 switch.o
- .debug_line    0x00000000000002b4      0x12e sbi.o
- .debug_line    0x00000000000003e2       0x5d main.o
- .debug_line    0x000000000000043f      0x602 printk.o
- .debug_line    0x0000000000000a41       0xfc trap.o
- .debug_line    0x0000000000000b3d      0x100 syscall.o
- .debug_line    0x0000000000000c3d      0x100 string.o
- .debug_line    0x0000000000000d3d      0x21e app.o
- .debug_line    0x0000000000000f5b      0x2b4 task.o
+ .debug_line    0x00000000000002b4       0xd4 sbi.o
+ .debug_line    0x0000000000000388       0x63 main.o
+ .debug_line    0x00000000000003eb      0x602 printk.o
+ .debug_line    0x00000000000009ed      0x140 trap.o
+ .debug_line    0x0000000000000b2d      0x122 syscall.o
+ .debug_line    0x0000000000000c4f      0x100 string.o
+ .debug_line    0x0000000000000d4f      0x1fe app.o
+ .debug_line    0x0000000000000f4d      0x2b4 task.o
+ .debug_line    0x0000000000001201      0x15f timer.o
 
-.debug_info     0x0000000000000000     0x159c
+.debug_info     0x0000000000000000     0x1fca
  .debug_info    0x0000000000000000       0x2e entry.o
  .debug_info    0x000000000000002e       0x2e kerneltrap.o
  .debug_info    0x000000000000005c       0x2e switch.o
- .debug_info    0x000000000000008a      0x26b sbi.o
- .debug_info    0x00000000000002f5       0x87 main.o
- .debug_info    0x000000000000037c      0x361 printk.o
- .debug_info    0x00000000000006dd      0x2f6 trap.o
- .debug_info    0x00000000000009d3      0x191 syscall.o
- .debug_info    0x0000000000000b64      0x13a string.o
- .debug_info    0x0000000000000c9e      0x305 app.o
- .debug_info    0x0000000000000fa3      0x5f9 task.o
+ .debug_info    0x000000000000008a      0x2b9 sbi.o
+ .debug_info    0x0000000000000343       0x87 main.o
+ .debug_info    0x00000000000003ca      0x361 printk.o
+ .debug_info    0x000000000000072b      0x305 trap.o
+ .debug_info    0x0000000000000a30      0x1b7 syscall.o
+ .debug_info    0x0000000000000be7      0x13a string.o
+ .debug_info    0x0000000000000d21      0xabe app.o
+ .debug_info    0x00000000000017df      0x5f9 task.o
+ .debug_info    0x0000000000001dd8      0x1f2 timer.o
 
-.debug_abbrev   0x0000000000000000      0x888
+.debug_abbrev   0x0000000000000000      0xad8
  .debug_abbrev  0x0000000000000000       0x14 entry.o
  .debug_abbrev  0x0000000000000014       0x14 kerneltrap.o
  .debug_abbrev  0x0000000000000028       0x14 switch.o
@@ -201,12 +215,13 @@ OUTPUT(os.elf elf64-littleriscv)
  .debug_abbrev  0x0000000000000129       0x42 main.o
  .debug_abbrev  0x000000000000016b      0x13c printk.o
  .debug_abbrev  0x00000000000002a7      0x110 trap.o
- .debug_abbrev  0x00000000000003b7       0xef syscall.o
- .debug_abbrev  0x00000000000004a6       0xa6 string.o
- .debug_abbrev  0x000000000000054c      0x165 app.o
- .debug_abbrev  0x00000000000006b1      0x1d7 task.o
+ .debug_abbrev  0x00000000000003b7      0x10d syscall.o
+ .debug_abbrev  0x00000000000004c4       0xa6 string.o
+ .debug_abbrev  0x000000000000056a      0x291 app.o
+ .debug_abbrev  0x00000000000007fb      0x1d7 task.o
+ .debug_abbrev  0x00000000000009d2      0x106 timer.o
 
-.debug_aranges  0x0000000000000000      0x210
+.debug_aranges  0x0000000000000000      0x240
  .debug_aranges
                 0x0000000000000000       0x30 entry.o
  .debug_aranges
@@ -229,36 +244,41 @@ OUTPUT(os.elf elf64-littleriscv)
                 0x00000000000001b0       0x30 app.o
  .debug_aranges
                 0x00000000000001e0       0x30 task.o
+ .debug_aranges
+                0x0000000000000210       0x30 timer.o
 
-.debug_str      0x0000000000000000      0x56f
+.debug_str      0x0000000000000000      0x977
  .debug_str     0x0000000000000000       0x3b entry.o
  .debug_str     0x000000000000003b        0xd kerneltrap.o
                                          0x40 (size before relaxing)
  .debug_str     0x0000000000000048        0x9 switch.o
                                          0x3c (size before relaxing)
- .debug_str     0x0000000000000051      0x227 sbi.o
-                                        0x28c (size before relaxing)
- .debug_str     0x0000000000000278       0x40 main.o
+ .debug_str     0x0000000000000051      0x291 sbi.o
+                                        0x2e6 (size before relaxing)
+ .debug_str     0x00000000000002e2        0xf main.o
                                          0xfc (size before relaxing)
- .debug_str     0x00000000000002b8       0x7d printk.o
+ .debug_str     0x00000000000002f1       0x76 printk.o
                                         0x17e (size before relaxing)
- .debug_str     0x0000000000000335       0x50 trap.o
-                                        0x14c (size before relaxing)
- .debug_str     0x0000000000000385       0x3c syscall.o
-                                        0x153 (size before relaxing)
- .debug_str     0x00000000000003c1       0x22 string.o
+ .debug_str     0x0000000000000367       0x52 trap.o
+                                        0x157 (size before relaxing)
+ .debug_str     0x00000000000003b9       0x45 syscall.o
+                                        0x161 (size before relaxing)
+ .debug_str     0x00000000000003fe       0x1c string.o
                                         0x11b (size before relaxing)
- .debug_str     0x00000000000003e3       0x55 app.o
-                                        0x183 (size before relaxing)
- .debug_str     0x0000000000000438      0x137 task.o
+ .debug_str     0x000000000000041a      0x3e7 app.o
+                                        0x548 (size before relaxing)
+ .debug_str     0x0000000000000801      0x132 task.o
                                         0x25a (size before relaxing)
+ .debug_str     0x0000000000000933       0x44 timer.o
+                                        0x161 (size before relaxing)
 
-.debug_frame    0x0000000000000000      0x698
- .debug_frame   0x0000000000000000       0x70 sbi.o
- .debug_frame   0x0000000000000070       0x40 main.o
- .debug_frame   0x00000000000000b0       0xf8 printk.o
- .debug_frame   0x00000000000001a8       0xd0 trap.o
- .debug_frame   0x0000000000000278       0xa0 syscall.o
- .debug_frame   0x0000000000000318       0x70 string.o
- .debug_frame   0x0000000000000388      0x1a0 app.o
- .debug_frame   0x0000000000000528      0x170 task.o
+.debug_frame    0x0000000000000000      0x890
+ .debug_frame   0x0000000000000000       0xa0 sbi.o
+ .debug_frame   0x00000000000000a0       0x40 main.o
+ .debug_frame   0x00000000000000e0       0xf8 printk.o
+ .debug_frame   0x00000000000001d8       0xd0 trap.o
+ .debug_frame   0x00000000000002a8       0xd0 syscall.o
+ .debug_frame   0x0000000000000378       0x70 string.o
+ .debug_frame   0x00000000000003e8      0x1a8 app.o
+ .debug_frame   0x0000000000000590      0x170 task.o
+ .debug_frame   0x0000000000000700      0x190 timer.o
