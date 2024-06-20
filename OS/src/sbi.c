@@ -1,7 +1,7 @@
 /*sbi.c*/
-#include "sbi.h"
+#include "sifanos/sbi.h"
 //#include "stdint.h"
-#include "os.h"
+#include "sifanos/os.h"
 struct sbiret sbi_ecall(int ext, int fid, unsigned long arg0,
 			unsigned long arg1, unsigned long arg2,
 			unsigned long arg3, unsigned long arg4,

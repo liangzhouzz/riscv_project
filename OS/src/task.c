@@ -1,4 +1,4 @@
-#include "os.h"
+#include "sifanos/os.h"
 #define USER_STACK_SIZE (4096 * 2)
 #define KERNEL_STACK_SIZE (4096 * 2)
 #define MAX_TASKS 10   /* 操作系统支持的最大任务数量 */

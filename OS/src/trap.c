@@ -1,6 +1,6 @@
-#include "os.h"
-#include "context.h"
-#include "riscv.h"
+#include "sifanos/os.h"
+#include "sifanos/context.h"
+#include "sifanos/riscv.h"
 
 
 trap_Context* trap_handler(trap_Context* cx)

@@ -1,5 +1,5 @@
 /* syscall.c */
-#include "os.h"
+#include "sifanos/os.h"
 
 
 uint64_t __sys_gettime()

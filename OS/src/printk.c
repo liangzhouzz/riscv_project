@@ -1,4 +1,4 @@
-#include "os.h"
+#include "sifanos/os.h"
 void uart_puts(char *s)
 {
 	while (*s) {

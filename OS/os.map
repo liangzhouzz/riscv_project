@@ -179,19 +179,19 @@ OUTPUT(os.elf elf64-littleriscv)
  .comment       0x000000000000000e        0xf task.o
  .comment       0x000000000000000e        0xf timer.o
 
-.debug_line     0x0000000000000000     0x1360
- .debug_line    0x0000000000000000       0x40 entry.o
- .debug_line    0x0000000000000040      0x213 kerneltrap.o
- .debug_line    0x0000000000000253       0x61 switch.o
- .debug_line    0x00000000000002b4       0xd4 sbi.o
- .debug_line    0x0000000000000388       0x63 main.o
- .debug_line    0x00000000000003eb      0x602 printk.o
- .debug_line    0x00000000000009ed      0x140 trap.o
- .debug_line    0x0000000000000b2d      0x122 syscall.o
- .debug_line    0x0000000000000c4f      0x100 string.o
- .debug_line    0x0000000000000d4f      0x1fe app.o
- .debug_line    0x0000000000000f4d      0x2b4 task.o
- .debug_line    0x0000000000001201      0x15f timer.o
+.debug_line     0x0000000000000000     0x13fc
+ .debug_line    0x0000000000000000       0x44 entry.o
+ .debug_line    0x0000000000000044      0x217 kerneltrap.o
+ .debug_line    0x000000000000025b       0x65 switch.o
+ .debug_line    0x00000000000002c0       0xea sbi.o
+ .debug_line    0x00000000000003aa       0x67 main.o
+ .debug_line    0x0000000000000411      0x606 printk.o
+ .debug_line    0x0000000000000a17      0x156 trap.o
+ .debug_line    0x0000000000000b6d      0x138 syscall.o
+ .debug_line    0x0000000000000ca5      0x104 string.o
+ .debug_line    0x0000000000000da9      0x214 app.o
+ .debug_line    0x0000000000000fbd      0x2ca task.o
+ .debug_line    0x0000000000001287      0x175 timer.o
 
 .debug_info     0x0000000000000000     0x1fca
  .debug_info    0x0000000000000000       0x2e entry.o
@@ -247,30 +247,30 @@ OUTPUT(os.elf elf64-littleriscv)
  .debug_aranges
                 0x0000000000000210       0x30 timer.o
 
-.debug_str      0x0000000000000000      0x977
- .debug_str     0x0000000000000000       0x3b entry.o
- .debug_str     0x000000000000003b        0xd kerneltrap.o
+.debug_str      0x0000000000000000      0x9a7
+ .debug_str     0x0000000000000000       0x3f entry.o
+ .debug_str     0x000000000000003f       0x11 kerneltrap.o
+                                         0x44 (size before relaxing)
+ .debug_str     0x0000000000000050        0xd switch.o
                                          0x40 (size before relaxing)
- .debug_str     0x0000000000000048        0x9 switch.o
-                                         0x3c (size before relaxing)
- .debug_str     0x0000000000000051      0x291 sbi.o
-                                        0x2e6 (size before relaxing)
- .debug_str     0x00000000000002e2        0xf main.o
-                                         0xfc (size before relaxing)
- .debug_str     0x00000000000002f1       0x76 printk.o
-                                        0x17e (size before relaxing)
- .debug_str     0x0000000000000367       0x52 trap.o
-                                        0x157 (size before relaxing)
- .debug_str     0x00000000000003b9       0x45 syscall.o
-                                        0x161 (size before relaxing)
- .debug_str     0x00000000000003fe       0x1c string.o
-                                        0x11b (size before relaxing)
- .debug_str     0x000000000000041a      0x3e7 app.o
-                                        0x548 (size before relaxing)
- .debug_str     0x0000000000000801      0x132 task.o
-                                        0x25a (size before relaxing)
- .debug_str     0x0000000000000933       0x44 timer.o
-                                        0x161 (size before relaxing)
+ .debug_str     0x000000000000005d      0x295 sbi.o
+                                        0x2ea (size before relaxing)
+ .debug_str     0x00000000000002f2       0x13 main.o
+                                        0x100 (size before relaxing)
+ .debug_str     0x0000000000000305       0x7a printk.o
+                                        0x182 (size before relaxing)
+ .debug_str     0x000000000000037f       0x56 trap.o
+                                        0x15b (size before relaxing)
+ .debug_str     0x00000000000003d5       0x49 syscall.o
+                                        0x165 (size before relaxing)
+ .debug_str     0x000000000000041e       0x20 string.o
+                                        0x11f (size before relaxing)
+ .debug_str     0x000000000000043e      0x3eb app.o
+                                        0x54c (size before relaxing)
+ .debug_str     0x0000000000000829      0x136 task.o
+                                        0x25e (size before relaxing)
+ .debug_str     0x000000000000095f       0x48 timer.o
+                                        0x165 (size before relaxing)
 
 .debug_frame    0x0000000000000000      0x890
  .debug_frame   0x0000000000000000       0xa0 sbi.o
