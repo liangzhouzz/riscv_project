@@ -23,6 +23,9 @@ SRCS_C = \
 	app.c \
 	task.c \
 	timer.c \
+	vsprintf.c \
+	printf.c \
+	
 
 INCLUDE:=-I./include
 SRC:=./src

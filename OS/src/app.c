@@ -1,5 +1,6 @@
 #include "sifanos/os.h"
-#include "string.h"
+#include "sifanos/syscall.h"
+#include "sifanos/stdio.h"
 
 uint64_t syscall(size_t id, reg_t arg1, reg_t arg2, reg_t arg3) {
     long ret;
@@ -17,7 +18,7 @@ uint64_t syscall(size_t id, reg_t arg1, reg_t arg2, reg_t arg3) {
     return ret;
 }
 
-uint64_t sys_wirte(size_t fd, const char* buf, size_t len)
+uint64_t sys_write(size_t fd, const char* buf, size_t len)
 {
     return syscall(__NR_write, fd, buf, len);
 }
@@ -45,7 +46,7 @@ void task1()
     int len = strlen(message);
     while (1)
     {
-        sys_wirte(1,message, len);
+        printf(message);
         
     }
 }
@@ -57,7 +58,7 @@ void task2()
     int len = strlen(message);
     while (1)
     {
-        sys_wirte(1,message, len);
+        printf(message);
         
     }
 
@@ -72,9 +73,7 @@ void task3()
     int len = strlen(message);
     while (1)
     {
-        sys_wirte(1,message, len);
-        //task_delay(10000);
-        //sys_yield();
+        printf(message);
     }
 
 }

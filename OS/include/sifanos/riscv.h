@@ -1,5 +1,5 @@
-#ifndef __RISCV_H__
-#define __RISCV_H__
+#ifndef SOS__RISCV_H__
+#define SOS__RISCV_H__
 
 #include "os.h"
 /* 读取 sepc 寄存器的值 */

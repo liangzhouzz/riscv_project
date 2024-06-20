@@ -58,6 +58,9 @@
   "C_Cpp_Runner.msvcSecureNoWarnings": false,
   "files.associations": {
     "string.h": "c",
-    "context.h": "c"
+    "context.h": "c",
+    "os.h": "c",
+    "task.h": "c",
+    "riscv.h": "c"
   }
 }

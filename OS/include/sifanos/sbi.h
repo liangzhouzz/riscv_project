@@ -1,6 +1,6 @@
 /*sbi.h*/
-#ifndef __SBI_H__
-#define __SBI_H__
+#ifndef SOS__SBI_H__
+#define SOS__SBI_H__
 
 enum sbi_ext_id {
 	SBI_EXT_0_1_SET_TIMER = 0x0,                    // 设置定时器

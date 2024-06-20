@@ -1,5 +1,5 @@
-#ifndef __CONTEXT_H__
-#define __CONTEXT_H__
+#ifndef SOS__CONTEXT_H__
+#define SOS__CONTEXT_H__
 #include "os.h"
 
 /*S模式的trap上下文*/

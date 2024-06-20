@@ -1,5 +1,5 @@
-#ifndef __TYPES_H__
-#define __TYPES_H__
+#ifndef SOS__TYPES_H__
+#define SOS__TYPES_H__
 // 定义无符号整型
 typedef unsigned char uint8_t;
 typedef unsigned short uint16_t;
