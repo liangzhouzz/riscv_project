@@ -25,6 +25,9 @@ SRCS_C = \
 	timer.c \
 	vsprintf.c \
 	printf.c \
+	address.c \
+	assert.c \
+	stack.c \
 	
 
 INCLUDE:=-I./include

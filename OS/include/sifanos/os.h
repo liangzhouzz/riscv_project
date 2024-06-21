@@ -10,7 +10,8 @@
 #include "sifanos/task.h"
 #include "sifanos/stdio.h"
 #include "sifanos/syscall.h"
-
+#include "sifanos/assert.h"
+#include "sifanos/address.h"
 
 
 
