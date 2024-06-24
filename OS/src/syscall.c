@@ -28,7 +28,7 @@ uint64_t __SYSCALL(size_t syscall_id, reg_t arg1, reg_t arg2, reg_t arg3) {
 
 void __sys_write(size_t fd, const char* data, size_t len)
 {
-    if(fd ==1)
+    if(fd ==stdout || fd == stderr)
     {
         printk(data);
     }
